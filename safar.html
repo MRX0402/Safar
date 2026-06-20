@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safar — chipta va qaytarish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#E7F1FC; --bg2:#D8E9FA; --surface:#FFFFFF; --surface-2:#F0F6FD;
+  --ink:#0F2746; --muted:#566B86; --faint:#93A6BE;
+  --line:rgba(18,70,140,0.10); --line-2:rgba(18,70,140,0.20);
+  --brand:#1E6FE0; --brand-ink:#0F4592; --brand-soft:#DBEAFC;
+  --amber:#B26B0C; --amber-soft:#FBEEDA;
+  --green:#1C8C58; --green-soft:#DCF2E7;
+  --red:#D14040; --red-soft:#FBE7E7;
+  --r-sm:10px; --r:14px; --r-lg:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Manrope',system-ui,sans-serif;background:#b9d3ef;color:var(--ink);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px 12px;font-feature-settings:"tnum" 1}
+.tnum{font-variant-numeric:tabular-nums}
+button{font-family:inherit}
+
+.phone{width:390px;max-width:100%;min-height:800px;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);border-radius:40px;border:11px solid #16202e;position:relative;overflow:hidden;box-shadow:0 32px 64px -22px rgba(0,40,90,.5);display:flex;flex-direction:column}
+.notch{height:32px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:13px;font-weight:700;flex:none;color:var(--ink)}
+.notch .right i{margin-left:6px;font-size:14px}
+
+.stage{flex:1;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column;padding-bottom:92px}
+.screen.active{display:flex}
+.screen::-webkit-scrollbar{width:0}
+
+.hd{padding:14px 20px 4px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}
+.hd h1{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.hd .sub{font-size:12.5px;color:var(--muted);font-weight:600}
+.iconbtn{width:40px;height:40px;border-radius:13px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--brand-ink);cursor:pointer;position:relative;flex:none}
+.iconbtn:active{transform:scale(.92)}
+.dotbadge{position:absolute;top:8px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--red);border:2px solid var(--surface)}
+.back{display:inline-flex;align-items:center;gap:7px;font-size:16px;font-weight:700;cursor:pointer}
+.back i{font-size:21px}
+.body{padding:8px 20px 0;display:flex;flex-direction:column;gap:14px}
+
+.brand{display:flex;align-items:center;gap:9px}
+.brand .mark{width:34px;height:34px;border-radius:11px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px}
+.brand .name{font-size:20px;font-weight:800;letter-spacing:-.5px}
+
+.modes{display:flex;gap:8px}
+.mode{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);transition:.15s}
+.mode i{font-size:23px}
+.mode.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.mode:active{transform:scale(.96)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px}
+.field{display:flex;align-items:center;gap:12px;padding:11px 4px;cursor:pointer}
+.field i{font-size:20px;color:var(--brand);width:22px;text-align:center}
+.field .lbl{font-size:10.5px;color:var(--faint);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.field .val{font-size:16px;font-weight:700}
+.field+.field{border-top:1px solid var(--line)}
+.swap{position:absolute;right:24px;width:36px;height:36px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);border:none;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;margin-top:-18px}
+.swap:active{transform:rotate(180deg)}
+
+.chiprow{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.chiprow::-webkit-scrollbar{display:none}
+.chip{flex:none;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.btn{width:100%;border:none;border-radius:var(--r);padding:15px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(.985)}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line-2)}
+.btn-danger{background:var(--red-soft);color:var(--red);border:1px solid rgba(209,64,64,.25)}
+.btn i{font-size:19px}
+
+.sec-title{font-size:12.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center}
+.sec-title a{color:var(--brand);font-size:13px;text-transform:none;letter-spacing:0;font-weight:700;cursor:pointer}
+
+.trip{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;transition:.12s}
+.trip:active{background:var(--surface-2)}
+.trip .top{display:flex;justify-content:space-between;align-items:flex-start}
+.trip .op{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--muted)}
+.trip .op i{font-size:18px;color:var(--brand)}
+.trip .price{font-size:17px;font-weight:800}
+.route{display:flex;align-items:center;gap:10px;margin-top:10px}
+.route .time{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.route .city{font-size:12px;color:var(--muted);font-weight:600}
+.route .line{flex:1;height:2px;background:var(--line-2);position:relative;border-radius:2px}
+.route .line::after{content:'';position:absolute;right:0;top:-2px;width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.route .line i{position:absolute;left:50%;top:-9px;transform:translateX(-50%);background:var(--surface);color:var(--faint);font-size:14px;padding:0 3px}
+.route .dur{font-size:11px;color:var(--faint);font-weight:700;text-align:center}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px}
+.tag i{font-size:13px}
+.tag-brand{background:var(--brand-soft);color:var(--brand-ink)}
+.tag-amber{background:var(--amber-soft);color:var(--amber)}
+.tag-green{background:var(--green-soft);color:var(--green)}
+.tag-red{background:var(--red-soft);color:var(--red)}
+.tag-gray{background:var(--surface-2);color:var(--muted)}
+
+.counter{display:flex;align-items:center;gap:14px}
+.counter button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);font-size:20px;font-weight:700;color:var(--brand);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.counter span{font-size:17px;font-weight:800;min-width:20px;text-align:center}
+
+/* seat picker */
+.seatmap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.seatgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.seat{aspect-ratio:1;border-radius:10px;border:1px solid var(--line-2);background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer}
+.seat.sel{background:var(--brand);border-color:var(--brand);color:#fff}
+.seat.taken{background:var(--bg2);color:var(--faint);cursor:not-allowed;opacity:.7}
+.seatlegend{display:flex;gap:16px;justify-content:center;font-size:11px;font-weight:700;color:var(--muted)}
+.seatlegend span{display:flex;align-items:center;gap:6px}
+.dotleg{width:13px;height:13px;border-radius:5px}
+
+.cart-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;gap:12px;align-items:center}
+.cart-item .ic{width:44px;height:44px;border-radius:12px;background:var(--brand-soft);color:var(--brand-ink);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.cart-item .info{flex:1}
+.cart-item .info .t{font-size:15px;font-weight:800}
+.cart-item .info .s{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
+.cart-item .rm{color:var(--faint);font-size:20px;cursor:pointer;background:none;border:none}
+.cart-item .rm:active{color:var(--red)}
+
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.sumrow{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);font-weight:600}
+.sumrow.total{border-top:1px solid var(--line);padding-top:12px;color:var(--ink);font-size:18px;font-weight:800}
+
+.radio{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.radio.on{border-color:var(--brand);background:var(--brand-soft)}
+.radio .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line-2);flex:none;display:flex;align-items:center;justify-content:center}
+.radio.on .dot{border-color:var(--brand);background:var(--brand)}
+.radio.on .dot::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff}
+.radio .pm{flex:1;font-size:15px;font-weight:800}
+.radio .pm small{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.radio>i{font-size:24px;color:var(--brand-ink)}
+
+.promo{display:flex;gap:8px}
+.promo input{flex:1;border:1px solid var(--line-2);border-radius:var(--r);padding:13px 14px;font-size:15px;font-weight:600;font-family:inherit;outline:none;background:var(--surface)}
+.promo input:focus{border-color:var(--brand)}
+.promo button{border:none;background:var(--brand-ink);color:#fff;border-radius:var(--r);padding:0 18px;font-weight:800;cursor:pointer}
+
+.segtabs{display:flex;background:var(--surface-2);border-radius:var(--r);padding:4px;gap:4px}
+.segtabs button{flex:1;border:none;background:none;font-size:14px;font-weight:800;color:var(--muted);padding:9px;border-radius:11px;cursor:pointer}
+.segtabs button.on{background:var(--surface);color:var(--brand);box-shadow:0 1px 4px rgba(0,40,90,.1)}
+
+.tkt{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer}
+.tkt .strip{height:5px;background:var(--brand)}
+.tkt.past .strip{background:var(--faint)}
+.tkt.refunded .strip{background:var(--red)}
+.tkt .in{padding:14px}
+
+.prof-head{display:flex;align-items:center;gap:14px}
+.avatar{width:60px;height:60px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800}
+.wallet{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-ink) 100%);color:#fff;border-radius:var(--r-lg);padding:18px}
+.wallet .lbl{font-size:13px;font-weight:700;opacity:.9}
+.wallet .amt{font-size:29px;font-weight:800;letter-spacing:-.5px;margin-top:2px}
+.wallet .wbtns{display:flex;gap:8px;margin-top:12px}
+.wallet .wbtns button{flex:1;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:11px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.wallet .wbtns button:active{background:rgba(255,255,255,.32)}
+
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.statcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 10px;text-align:center}
+.statcard .n{font-size:20px;font-weight:800;color:var(--brand-ink)}
+.statcard .l{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px}
+
+.menu{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.menu .mi{display:flex;align-items:center;gap:14px;padding:15px 16px;font-size:15px;font-weight:700;cursor:pointer}
+.menu .mi+.mi{border-top:1px solid var(--line)}
+.menu .mi i:first-child{font-size:21px;color:var(--brand);width:24px;text-align:center}
+.menu .mi .chev{margin-left:auto;color:var(--faint);font-size:18px}
+.menu .mi:active{background:var(--surface-2)}
+
+.tier{border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;display:flex;align-items:center;justify-content:space-between;background:var(--surface)}
+.tier.now{border:2px solid var(--green);background:var(--green-soft)}
+.tier.dead{opacity:.55}
+.tier .lab{font-size:14px;font-weight:600}
+.tier .pct{font-size:16px;font-weight:800}
+.nowtag{font-size:11px;font-weight:800;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:5px}
+
+.countdown{background:var(--brand-soft);border:1px solid rgba(30,111,224,.22);border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px}
+.countdown>i{font-size:27px;color:var(--brand-ink)}
+.countdown .lbl{font-size:12px;color:var(--brand-ink);font-weight:700}
+.countdown .big{font-size:18px;font-weight:800;color:var(--brand-ink)}
+
+.meter{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.meter .bar{display:flex;height:46px;border-radius:11px;overflow:hidden;margin:12px 0 8px}
+.meter .seg{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;position:relative}
+.meter .scale{display:flex;justify-content:space-between;font-size:10px;color:var(--faint);font-weight:700}
+.meter .marker{position:absolute;top:-6px;bottom:-6px;width:3px;background:var(--ink);border-radius:2px}
+
+.perf{border:none;border-top:2px dashed var(--line-2);margin:4px 0}
+
+/* notifications */
+.noti{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;gap:12px;cursor:pointer;position:relative}
+.noti.unread{background:var(--brand-soft);border-color:rgba(30,111,224,.2)}
+.noti .nic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex:none}
+.noti .nbody .nt{font-size:14px;font-weight:800}
+.noti .nbody .nx{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px;line-height:1.4}
+.noti .nbody .ntime{font-size:11px;color:var(--faint);font-weight:700;margin-top:5px}
+.noti .udot{position:absolute;top:14px;right:14px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
+
+/* settings */
+.setrow{display:flex;align-items:center;gap:14px;padding:15px 16px;font-size:15px;font-weight:700}
+.setrow+.setrow{border-top:1px solid var(--line)}
+.setrow i:first-child{font-size:21px;color:var(--brand);width:24px;text-align:center}
+.switch{margin-left:auto;width:46px;height:27px;border-radius:14px;background:var(--line-2);position:relative;cursor:pointer;transition:.18s;flex:none}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:.18s}
+.switch.on{background:var(--brand)}
+.switch.on::after{left:22px}
+
+.nav{position:absolute;left:0;right:0;bottom:0;height:76px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-around;padding-bottom:8px}
+.nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:800;color:var(--faint);cursor:pointer;position:relative;flex:1}
+.nav button i{font-size:24px}
+.nav button.on{color:var(--brand)}
+.nav .badge{position:absolute;top:-3px;right:50%;transform:translateX(18px);background:var(--red);color:#fff;font-size:10px;font-weight:800;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+
+.muted{color:var(--muted);font-size:13px;font-weight:500;line-height:1.5}
+.spacer{height:6px}
+
+/* toast */
+.toast{position:absolute;left:20px;right:20px;bottom:92px;background:var(--ink);color:#fff;border-radius:var(--r);padding:13px 16px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(14px);transition:.25s;pointer-events:none;z-index:50}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast i{font-size:20px;color:#6FE0A8}
+
+/* modal */
+.overlay{position:absolute;inset:0;background:rgba(10,30,60,.5);display:none;align-items:flex-end;z-index:60}
+.overlay.show{display:flex}
+.sheet{background:var(--surface);width:100%;border-radius:24px 24px 0 0;padding:22px 20px 26px;animation:up .25s ease}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.grabber{width:42px;height:5px;border-radius:3px;background:var(--line-2);margin:0 auto 16px}
+.amtbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.amtbtns button{border:1px solid var(--line-2);background:var(--surface);border-radius:11px;padding:13px 6px;font-size:14px;font-weight:800;color:var(--ink);cursor:pointer}
+.amtbtns button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch"><span class="tnum">9:41</span><span class="right"><i class="ti ti-signal-4g"></i><i class="ti ti-wifi"></i><i class="ti ti-battery-3"></i></span></div>
+
+  <div class="stage">
+
+    <!-- 1. SEARCH -->
+    <section class="screen active" id="s-search">
+      <div class="hd">
+        <div class="brand"><span class="mark"><i class="ti ti-route"></i></span><span class="name">Safar</span></div>
+        <div style="display:flex;gap:8px">
+          <button class="iconbtn" onclick="go('s-noti')"><i class="ti ti-bell"></i><span class="dotbadge" id="bellDot"></span></button>
+          <button class="iconbtn" onclick="go('s-profile')"><i class="ti ti-user"></i></button>
+        </div>
+      </div>
+      <div class="body">
+        <div><div style="font-size:24px;font-weight:800;letter-spacing:-.5px;line-height:1.2">Qayoqqa<br>boramiz?</div>
+          <div class="muted" style="margin-top:6px">Poyezd, avtobus va samolyot — qaytarish kafolati bilan.</div></div>
+
+        <div class="modes">
+          <div class="mode on" onclick="pickMode(this)"><i class="ti ti-train"></i>Poyezd</div>
+          <div class="mode" onclick="pickMode(this)"><i class="ti ti-bus"></i>Avtobus</div>
+          <div class="mode" onclick="pickMode(this)"><i class="ti ti-plane"></i>Samolyot</div>
+        </div>
+
+        <div class="card" style="position:relative">
+          <div class="field" onclick="toast('Shahar tanlash')"><i class="ti ti-circle-dot"></i><div><div class="lbl">Qayerdan</div><div class="val" id="cityFrom">Toshkent</div></div></div>
+          <button class="swap" onclick="swapCity()"><i class="ti ti-arrows-up-down"></i></button>
+          <div class="field" onclick="toast('Shahar tanlash')"><i class="ti ti-map-pin"></i><div><div class="lbl">Qayerga</div><div class="val" id="cityTo">Samarqand</div></div></div>
+          <div class="field" onclick="toast('Sana tanlash')"><i class="ti ti-calendar"></i><div><div class="lbl">Sana</div><div class="val">12-iyun, juma</div></div></div>
+          <div class="field" style="cursor:default"><i class="ti ti-users"></i><div style="flex:1"><div class="lbl">Yo'lovchilar</div><div class="val" id="paxLabel">1 kishi</div></div>
+            <div class="counter"><button onclick="pax(-1)">−</button><span id="paxN">1</span><button onclick="pax(1)">+</button></div></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="go('s-results')"><i class="ti ti-search"></i> Reyslarni izlash</button>
+
+        <div class="sec-title">Tezkor yo'nalishlar</div>
+        <div class="chiprow">
+          <div class="chip on">Samarqand</div><div class="chip">Buxoro</div><div class="chip">Xiva</div><div class="chip">Andijon</div><div class="chip">Nukus</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. RESULTS -->
+    <section class="screen" id="s-results">
+      <div class="hd">
+        <span class="back" onclick="go('s-search')"><i class="ti ti-chevron-left"></i></span>
+        <div style="flex:1;text-align:center"><h1 style="font-size:16px">Toshkent → Samarqand</h1><div class="sub">12-iyun · <span id="resCount">3</span> ta reys</div></div>
+        <button class="iconbtn" onclick="toast('Saralash o\'zgartirildi')"><i class="ti ti-adjustments-horizontal"></i></button>
+      </div>
+      <div class="body">
+        <div class="chiprow">
+          <div class="chip on" onclick="filt(this)">Hammasi</div>
+          <div class="chip" onclick="filt(this)"><i class="ti ti-train"></i> Poyezd</div>
+          <div class="chip" onclick="filt(this)"><i class="ti ti-bus"></i> Avtobus</div>
+          <div class="chip" onclick="filt(this)">Arzon avval</div>
+          <div class="chip" onclick="filt(this)">100% qaytarish</div>
+        </div>
+
+        <div class="trip" onclick="go('s-seat')">
+          <div class="top"><span class="op"><i class="ti ti-train"></i> Afrosiyob</span><span class="price tnum">240 000</span></div>
+          <div class="route"><div><div class="time tnum">14:30</div><div class="city">Toshkent</div></div><div class="line"><i class="ti ti-train"></i></div><div style="text-align:center"><div class="dur">2s 08d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">16:38</div><div class="city">Samarqand</div></div></div>
+          <div style="margin-top:10px;display:flex;gap:6px"><span class="tag tag-green"><i class="ti ti-shield-check"></i> 100% qaytarish</span><span class="tag tag-gray"><i class="ti ti-armchair"></i> 23 joy</span></div>
+        </div>
+        <div class="trip" onclick="go('s-seat')">
+          <div class="top"><span class="op"><i class="ti ti-train"></i> Sharq</span><span class="price tnum">95 000</span></div>
+          <div class="route"><div><div class="time tnum">08:10</div><div class="city">Toshkent</div></div><div class="line"><i class="ti ti-train"></i></div><div style="text-align:center"><div class="dur">3s 25d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">11:35</div><div class="city">Samarqand</div></div></div>
+          <div style="margin-top:10px;display:flex;gap:6px"><span class="tag tag-amber"><i class="ti ti-clock-dollar"></i> Qisman qaytarish</span></div>
+        </div>
+        <div class="trip" onclick="go('s-seat')">
+          <div class="top"><span class="op"><i class="ti ti-bus"></i> Avtobus Lux</span><span class="price tnum">70 000</span></div>
+          <div class="route"><div><div class="time tnum">15:00</div><div class="city">Toshkent</div></div><div class="line"><i class="ti ti-bus"></i></div><div style="text-align:center"><div class="dur">4s 10d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">19:10</div><div class="city">Samarqand</div></div></div>
+          <div style="margin-top:10px;display:flex;gap:6px"><span class="tag tag-green"><i class="ti ti-shield-check"></i> 100% qaytarish</span><span class="tag tag-gray"><i class="ti ti-wifi"></i> Wi-Fi</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SEAT SELECTION -->
+    <section class="screen" id="s-seat">
+      <div class="hd"><span class="back" onclick="go('s-results')"><i class="ti ti-chevron-left"></i> Joy tanlash</span></div>
+      <div class="body">
+        <div class="muted">Afrosiyob · Vagon 4 · bo'sh joyni tanlang</div>
+        <div class="seatmap">
+          <div class="seatlegend"><span><i class="dotleg" style="background:var(--surface-2);border:1px solid var(--line-2)"></i> Bo'sh</span><span><i class="dotleg" style="background:var(--brand)"></i> Tanlandi</span><span><i class="dotleg" style="background:var(--bg2)"></i> Band</span></div>
+          <div class="seatgrid" id="seatGrid"></div>
+          <div style="text-align:center" class="muted">Tanlangan joy: <b id="seatPick" style="color:var(--brand-ink)">—</b></div>
+        </div>
+        <button class="btn btn-primary" id="seatNext" onclick="go('s-checkout')" style="opacity:.5;pointer-events:none"><i class="ti ti-arrow-right"></i> Davom etish</button>
+      </div>
+    </section>
+
+    <!-- 4. CHECKOUT -->
+    <section class="screen" id="s-checkout">
+      <div class="hd"><span class="back" onclick="go('s-seat')"><i class="ti ti-chevron-left"></i> Rasmiylashtirish</span></div>
+      <div class="body">
+        <div class="card" style="padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span class="op" style="color:var(--muted);font-weight:800;font-size:13px;display:flex;gap:8px;align-items:center"><i class="ti ti-train" style="color:var(--brand);font-size:18px"></i> Afrosiyob</span><span class="tag tag-green"><i class="ti ti-shield-check"></i> 100% qaytarish</span></div>
+          <div class="route"><div><div class="time tnum">14:30</div><div class="city">Toshkent</div></div><div class="line"></div><div style="text-align:center"><div class="dur">2s 08d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">16:38</div><div class="city">Samarqand</div></div></div>
+        </div>
+        <div class="sec-title">Yo'lovchi</div>
+        <div class="card" style="padding:14px">
+          <div class="field" style="padding:8px 4px;cursor:default"><i class="ti ti-user"></i><div><div class="lbl">F.I.Sh</div><div class="val">Alisher Karimov</div></div></div>
+          <div class="field" style="padding:8px 4px;cursor:default"><i class="ti ti-id"></i><div><div class="lbl">Pasport</div><div class="val tnum">AB 1234567</div></div></div>
+        </div>
+        <div class="sec-title">Promo-kod</div>
+        <div class="promo"><input id="promoIn" placeholder="Masalan: SAFAR10"><button onclick="applyPromo()">Qo'llash</button></div>
+        <div class="sec-title">To'lov usuli</div>
+        <div class="radio on" onclick="pickPay(this)"><span class="dot"></span><span class="pm">Uzcard / Humo<small>•••• 4417</small></span><i class="ti ti-credit-card"></i></div>
+        <div class="radio" onclick="pickPay(this)"><span class="dot"></span><span class="pm">Safar hamyon<small id="payWallet">320 000 so'm</small></span><i class="ti ti-wallet"></i></div>
+        <div class="summary">
+          <div class="sumrow"><span>Chipta narxi</span><span class="tnum">240 000 so'm</span></div>
+          <div class="sumrow"><span>Xizmat haqi</span><span class="tnum">5 000 so'm</span></div>
+          <div class="sumrow" id="promoRow" style="display:none;color:var(--green)"><span>Chegirma (SAFAR10)</span><span class="tnum">−24 500 so'm</span></div>
+          <div class="sumrow"><span style="display:flex;align-items:center;gap:6px">Qaytarish himoyasi <i class="ti ti-shield-check" style="color:var(--green)"></i></span><span class="tnum" style="color:var(--green)">Bepul</span></div>
+          <div class="sumrow total"><span>Jami</span><span class="tnum" id="ckTotal">245 000 so'm</span></div>
+        </div>
+        <button class="btn btn-primary" onclick="payNow()"><i class="ti ti-lock"></i> To'lash — <span id="payBtnAmt">245 000</span> so'm</button>
+        <div class="spacer"></div>
+      </div>
+    </section>
+
+    <!-- CART -->
+    <section class="screen" id="s-cart">
+      <div class="hd"><h1>Korzinka</h1><div class="sub"><span id="cartCount">2</span> ta chipta</div></div>
+      <div class="body" id="cartBody">
+        <div class="cart-item" id="ci1"><span class="ic"><i class="ti ti-train"></i></span><div class="info"><div class="t">Toshkent → Samarqand</div><div class="s">Afrosiyob · 12-iyun, 14:30 · 240 000 so'm</div></div><button class="rm" onclick="rmCart('ci1',240000)"><i class="ti ti-trash"></i></button></div>
+        <div class="cart-item" id="ci2"><span class="ic"><i class="ti ti-bus"></i></span><div class="info"><div class="t">Samarqand → Buxoro</div><div class="s">Avtobus Lux · 14-iyun, 09:00 · 70 000 so'm</div></div><button class="rm" onclick="rmCart('ci2',70000)"><i class="ti ti-trash"></i></button></div>
+        <div class="summary">
+          <div class="sumrow"><span><span id="cartN">2</span> ta chipta</span><span class="tnum" id="cartSub">310 000 so'm</span></div>
+          <div class="sumrow"><span>Xizmat haqi</span><span class="tnum">10 000 so'm</span></div>
+          <div class="sumrow total"><span>Jami</span><span class="tnum" id="cartTotal">320 000 so'm</span></div>
+        </div>
+        <button class="btn btn-primary" onclick="go('s-checkout')"><i class="ti ti-arrow-right"></i> Rasmiylashtirish</button>
+        <button class="btn btn-ghost" onclick="go('s-search')"><i class="ti ti-plus"></i> Yana chipta qo'shish</button>
+      </div>
+    </section>
+
+    <!-- TICKETS -->
+    <section class="screen" id="s-tickets">
+      <div class="hd"><h1>Biletlarim</h1></div>
+      <div class="body">
+        <div class="segtabs"><button id="tab-active" class="on" onclick="setTab('active')">Faol</button><button id="tab-history" onclick="setTab('history')">Tarix</button></div>
+        <div id="list-active" style="display:flex;flex-direction:column;gap:14px">
+          <div class="tkt" onclick="go('s-detail')"><div class="strip"></div><div class="in">
+            <div style="display:flex;justify-content:space-between"><span class="tag tag-brand"><i class="ti ti-train"></i> Afrosiyob</span><span class="tag tag-green"><i class="ti ti-circle-check"></i> Tasdiqlangan</span></div>
+            <div class="route"><div><div class="time tnum">14:30</div><div class="city">Toshkent</div></div><div class="line"></div><div style="text-align:center"><div class="dur">2s 08d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">16:38</div><div class="city">Samarqand</div></div></div>
+            <div class="muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>12-iyun · Vagon 4 · Joy 17</span><span style="color:var(--brand);font-weight:800">Ko'rish ›</span></div></div></div>
+          <div class="tkt" onclick="go('s-detail')"><div class="strip"></div><div class="in">
+            <div style="display:flex;justify-content:space-between"><span class="tag tag-brand"><i class="ti ti-bus"></i> Avtobus Lux</span><span class="tag tag-green"><i class="ti ti-circle-check"></i> Tasdiqlangan</span></div>
+            <div class="route"><div><div class="time tnum">09:00</div><div class="city">Samarqand</div></div><div class="line"></div><div style="text-align:center"><div class="dur">2s 30d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">11:30</div><div class="city">Buxoro</div></div></div>
+            <div class="muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>14-iyun · Joy 8</span><span style="color:var(--brand);font-weight:800">Ko'rish ›</span></div></div></div>
+        </div>
+        <div id="list-history" style="display:none;flex-direction:column;gap:14px">
+          <div class="tkt past"><div class="strip"></div><div class="in">
+            <div style="display:flex;justify-content:space-between"><span class="tag tag-gray"><i class="ti ti-plane"></i> Uzbekistan Airways</span><span class="tag tag-gray"><i class="ti ti-check"></i> Yakunlangan</span></div>
+            <div class="route"><div><div class="time tnum">07:20</div><div class="city">Toshkent</div></div><div class="line"></div><div style="text-align:center"><div class="dur">1s 40d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">09:00</div><div class="city">Nukus</div></div></div>
+            <div class="muted" style="margin-top:10px">28-may · 1 200 000 so'm</div></div></div>
+          <div class="tkt refunded"><div class="strip"></div><div class="in">
+            <div style="display:flex;justify-content:space-between"><span class="tag tag-gray"><i class="ti ti-train"></i> Sharq</span><span class="tag tag-red"><i class="ti ti-arrow-back-up"></i> Qaytarilgan</span></div>
+            <div class="route"><div><div class="time tnum">18:00</div><div class="city">Toshkent</div></div><div class="line"></div><div style="text-align:center"><div class="dur">3s 10d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">21:10</div><div class="city">Jizzax</div></div></div>
+            <div class="muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>15-may · 70% qaytarildi</span><span class="tnum" style="color:var(--green);font-weight:800">+66 500 so'm</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DETAIL -->
+    <section class="screen" id="s-detail">
+      <div class="hd"><span class="back" onclick="go('s-tickets')"><i class="ti ti-chevron-left"></i> Chipta</span>
+        <div style="display:flex;gap:8px"><button class="iconbtn" onclick="toast('Havola nusxalandi')"><i class="ti ti-share"></i></button><button class="iconbtn" onclick="toast('Yuklab olindi')"><i class="ti ti-download"></i></button></div></div>
+      <div class="body">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div style="padding:16px 16px 0"><div style="display:flex;justify-content:space-between;align-items:center"><span class="tag tag-brand"><i class="ti ti-train"></i> Afrosiyob</span><span class="tag tag-green"><i class="ti ti-circle-check"></i> Tasdiqlangan</span></div>
+            <div class="route" style="margin-top:14px"><div><div class="time tnum" style="font-size:24px">14:30</div><div class="city">Toshkent</div></div><div class="line"></div><div style="text-align:center"><div class="dur">2s 08d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum" style="font-size:24px">16:38</div><div class="city">Samarqand</div></div></div></div>
+          <hr class="perf" style="margin:16px 0">
+          <div style="display:flex;justify-content:space-between;padding:0 16px 16px"><div><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Vagon · Joy</div><div style="font-weight:800" class="tnum">4 · 17</div></div><div style="text-align:center"><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Sana</div><div style="font-weight:800">12-iyun</div></div><div style="text-align:right"><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Narx</div><div style="font-weight:800" class="tnum">240 000</div></div></div>
+          <div style="background:var(--surface-2);padding:16px;display:flex;align-items:center;justify-content:center;gap:12px"><i class="ti ti-qrcode" style="font-size:50px"></i><div style="font-size:12px;color:var(--muted);font-weight:700">Nazoratda QR<br>kodni ko'rsating</div></div>
+        </div>
+        <div class="countdown"><i class="ti ti-clock-hour-4"></i><div><div class="lbl">Jo'nashgacha</div><div class="big tnum" id="cd">5 soat 12 daqiqa</div></div><span class="tag tag-green" style="margin-left:auto;padding:6px 10px">100% qaytadi</span></div>
+        <div class="meter"><div class="sec-title" style="margin-bottom:0">Qaytarish miqdori vaqt bo'yicha</div>
+          <div class="bar"><div class="seg" style="flex:5;background:var(--green)">100%</div><div class="seg" style="flex:3;background:#5BA46A">70%</div><div class="seg" style="flex:2;background:var(--amber)">55%</div><div class="seg" style="flex:2;background:#C99A4A">35%</div><div class="seg" style="flex:2;background:#C98686">0%<span class="marker" style="left:0"></span></div></div>
+          <div class="scale"><span>−3s</span><span>Jo'nash</span><span>+1s</span><span>+2s</span><span>keyin</span></div>
+          <div class="muted" style="margin-top:10px;font-size:12px">Hozir <b style="color:var(--green)">100%</b> bosqichidasiz. Qora chiziq joriy vaqtni ko'rsatadi.</div></div>
+        <div class="sec-title">Qaytarish shartlari</div>
+        <div class="tier now"><div><div class="lab">Jo'nashdan <b>3+ soat</b> oldin</div><div class="nowtag"><i class="ti ti-point-filled"></i> Hozir shu yerda · 240 000 so'm</div></div><span class="pct" style="color:var(--green)">100%</span></div>
+        <div class="tier"><span class="lab">Jo'nashga <b>3 soat – 0</b></span><span class="pct" style="color:var(--amber)">70%</span></div>
+        <div class="tier"><span class="lab">Qolib ketib <b>1 soat</b> ichida</span><span class="pct" style="color:var(--amber)">55%</span></div>
+        <div class="tier"><span class="lab">Qolib ketib <b>1–2 soat</b> ichida</span><span class="pct" style="color:var(--amber)">35%</span></div>
+        <div class="tier dead"><span class="lab"><b>2 soatdan</b> keyin</span><span class="pct" style="color:var(--red)">0%</span></div>
+        <button class="btn btn-danger" onclick="go('s-refund')"><i class="ti ti-arrow-back-up"></i> Chiptani qaytarish</button>
+        <div class="spacer"></div>
+      </div>
+    </section>
+
+    <!-- REFUND -->
+    <section class="screen" id="s-refund">
+      <div class="hd"><span class="back" onclick="go('s-detail')"><i class="ti ti-chevron-left"></i> Qaytarish</span></div>
+      <div class="body" id="refundBody">
+        <div style="text-align:center;padding:8px 0"><div style="width:74px;height:74px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto"><i class="ti ti-cash"></i></div>
+          <div style="font-size:22px;font-weight:800;margin-top:12px">Sizga <span class="tnum">240 000</span> so'm qaytadi</div>
+          <div class="muted" style="margin-top:4px">To'liq qaytarish — jo'nashga 3 soatdan ko'p vaqt bor.</div></div>
+        <div class="summary">
+          <div class="sumrow"><span>Chipta narxi</span><span class="tnum">240 000 so'm</span></div>
+          <div class="sumrow"><span>Qaytarish darajasi</span><span class="tnum" style="color:var(--green)">100%</span></div>
+          <div class="sumrow"><span>Ushlab qolinadi</span><span class="tnum">0 so'm</span></div>
+          <div class="sumrow total"><span>Qaytariladi</span><span class="tnum" style="color:var(--green)">240 000 so'm</span></div>
+        </div>
+        <div class="sec-title">Qaytarish manzili</div>
+        <div class="radio on" onclick="pickPay(this)"><span class="dot"></span><span class="pm">Safar hamyon<small>Bir zumda tushadi</small></span><i class="ti ti-bolt"></i></div>
+        <div class="radio" onclick="pickPay(this)"><span class="dot"></span><span class="pm">Uzcard •••• 4417<small>1–3 ish kuni</small></span><i class="ti ti-credit-card"></i></div>
+        <button class="btn btn-primary" onclick="confirmRefund()"><i class="ti ti-check"></i> Qaytarishni tasdiqlash</button>
+        <div class="muted" style="text-align:center;font-size:12px">Tasdiqlangach bu amalni bekor qilib bo'lmaydi.</div>
+        <div class="spacer"></div>
+      </div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section class="screen" id="s-noti">
+      <div class="hd"><span class="back" onclick="go('s-search')"><i class="ti ti-chevron-left"></i> Bildirishnomalar</span>
+        <button class="iconbtn" onclick="markAllRead()"><i class="ti ti-checks"></i></button></div>
+      <div class="body" id="notiBody">
+        <div class="noti unread" onclick="readNoti(this)"><span class="nic" style="background:var(--amber-soft);color:var(--amber)"><i class="ti ti-clock-exclamation"></i></span><div class="nbody"><div class="nt">Jo'nashga 3 soat qoldi</div><div class="nx">Afrosiyob 14:30. Hozir bekor qilsangiz 100% qaytadi.</div><div class="ntime">5 daqiqa oldin</div></div><span class="udot"></span></div>
+        <div class="noti unread" onclick="readNoti(this)"><span class="nic" style="background:var(--green-soft);color:var(--green)"><i class="ti ti-discount"></i></span><div class="nbody"><div class="nt">SAFAR10 chegirmasi</div><div class="nx">Keyingi chiptangizga 10% chegirma. 20-iyungacha.</div><div class="ntime">2 soat oldin</div></div><span class="udot"></span></div>
+        <div class="noti" onclick="readNoti(this)"><span class="nic" style="background:var(--brand-soft);color:var(--brand-ink)"><i class="ti ti-circle-check"></i></span><div class="nbody"><div class="nt">To'lov muvaffaqiyatli</div><div class="nx">Samarqand → Buxoro chiptasi tasdiqlandi.</div><div class="ntime">Kecha</div></div></div>
+        <div class="noti" onclick="readNoti(this)"><span class="nic" style="background:var(--green-soft);color:var(--green)"><i class="ti ti-cash"></i></span><div class="nbody"><div class="nt">Pul qaytarildi</div><div class="nx">66 500 so'm Safar hamyoningizga tushdi.</div><div class="ntime">15-may</div></div></div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="screen" id="s-profile">
+      <div class="hd"><h1>Profil</h1><button class="iconbtn" onclick="go('s-settings')"><i class="ti ti-settings"></i></button></div>
+      <div class="body">
+        <div class="prof-head"><div class="avatar">AK</div><div><div style="font-size:18px;font-weight:800">Alisher Karimov</div><div class="muted">+998 90 123 45 67</div></div></div>
+        <div class="wallet"><div class="lbl">Safar hamyon</div><div class="amt tnum" id="walletAmt">320 000 so'm</div>
+          <div class="wbtns"><button onclick="openTopup()"><i class="ti ti-plus"></i> To'ldirish</button><button onclick="toast('Hamyon tarixi')"><i class="ti ti-history"></i> Tarix</button></div></div>
+        <div class="statgrid">
+          <div class="statcard"><div class="n tnum">12</div><div class="l">Sayohat</div></div>
+          <div class="statcard"><div class="n tnum">3</div><div class="l">Qaytarish</div></div>
+          <div class="statcard"><div class="n tnum">450</div><div class="l">Bonus</div></div>
+        </div>
+        <div class="menu">
+          <div class="mi" onclick="go('s-tickets')"><i class="ti ti-ticket"></i> Mening biletlarim <i class="ti ti-chevron-right chev"></i></div>
+          <div class="mi" onclick="go('s-tickets');setTab('history')"><i class="ti ti-arrow-back-up"></i> Qaytarishlar tarixi <i class="ti ti-chevron-right chev"></i></div>
+          <div class="mi" onclick="toast('Yo\'lovchilar ro\'yxati')"><i class="ti ti-users"></i> Yo'lovchilar <i class="ti ti-chevron-right chev"></i></div>
+          <div class="mi" onclick="go('s-noti')"><i class="ti ti-bell"></i> Bildirishnomalar <i class="ti ti-chevron-right chev"></i></div>
+          <div class="mi" onclick="toast('Qaytarish qoidalari')"><i class="ti ti-shield-check"></i> Qaytarish qoidalari <i class="ti ti-chevron-right chev"></i></div>
+          <div class="mi" onclick="toast('Yordam markazi ochildi')"><i class="ti ti-headset"></i> Yordam <i class="ti ti-chevron-right chev"></i></div>
+        </div>
+        <button class="btn btn-ghost" style="color:var(--red)" onclick="toast('Tizimdan chiqildi')"><i class="ti ti-logout"></i> Chiqish</button>
+        <div class="spacer"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="screen" id="s-settings">
+      <div class="hd"><span class="back" onclick="go('s-profile')"><i class="ti ti-chevron-left"></i> Sozlamalar</span></div>
+      <div class="body">
+        <div class="sec-title">Bildirishnomalar</div>
+        <div class="menu">
+          <div class="setrow"><i class="ti ti-bell"></i> Push bildirishnomalar <div class="switch on" onclick="tg(this)"></div></div>
+          <div class="setrow"><i class="ti ti-clock-hour-3"></i> Jo'nash eslatmalari <div class="switch on" onclick="tg(this)"></div></div>
+          <div class="setrow"><i class="ti ti-discount"></i> Aksiya va chegirmalar <div class="switch" onclick="tg(this)"></div></div>
+        </div>
+        <div class="sec-title">Umumiy</div>
+        <div class="menu">
+          <div class="setrow"><i class="ti ti-language"></i> Til <span style="margin-left:auto;color:var(--muted);font-weight:700">O'zbekcha</span></div>
+          <div class="setrow"><i class="ti ti-fingerprint"></i> Face / Touch ID <div class="switch on" onclick="tg(this)"></div></div>
+          <div class="setrow"><i class="ti ti-moon"></i> Tungi rejim <div class="switch" onclick="tg(this)"></div></div>
+        </div>
+        <div class="menu">
+          <div class="mi" onclick="toast('Maxfiylik siyosati')"><i class="ti ti-lock"></i> Maxfiylik <i class="ti ti-chevron-right chev"></i></div>
+          <div class="mi" onclick="toast('Ilova versiyasi 1.0.0')"><i class="ti ti-info-circle"></i> Ilova haqida <i class="ti ti-chevron-right chev"></i></div>
+        </div>
+        <div class="spacer"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="toast" id="toast"><i class="ti ti-circle-check"></i><span id="toastMsg"></span></div>
+
+  <div class="overlay" id="topup">
+    <div class="sheet">
+      <div class="grabber"></div>
+      <h3>Hamyonni to'ldirish</h3>
+      <div class="muted">Summani tanlang yoki kiriting</div>
+      <div class="amtbtns" id="amtBtns">
+        <button onclick="pickAmt(this,50000)">50 000</button>
+        <button class="on" onclick="pickAmt(this,100000)">100 000</button>
+        <button onclick="pickAmt(this,200000)">200 000</button>
+      </div>
+      <button class="btn btn-primary" onclick="doTopup()"><i class="ti ti-plus"></i> <span id="topAmt">100 000</span> so'm to'ldirish</button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="closeTopup()">Bekor qilish</button>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button id="n-search" class="on" onclick="go('s-search')"><i class="ti ti-search"></i>Qidirish</button>
+    <button id="n-cart" onclick="go('s-cart')"><i class="ti ti-shopping-bag"></i>Korzinka<span class="badge" id="cartBadge">2</span></button>
+    <button id="n-tickets" onclick="go('s-tickets')"><i class="ti ti-ticket"></i>Biletlar</button>
+    <button id="n-profile" onclick="go('s-profile')"><i class="ti ti-user"></i>Profil</button>
+  </nav>
+</div>
+
+<script>
+var navMap={'s-search':'n-search','s-results':'n-search','s-seat':'n-search','s-checkout':'n-cart','s-cart':'n-cart','s-tickets':'n-tickets','s-detail':'n-tickets','s-refund':'n-tickets','s-noti':'n-search','s-profile':'n-profile','s-settings':'n-profile'};
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  var el=document.getElementById(id);el.classList.add('active');el.scrollTop=0;
+  document.querySelectorAll('.nav button').forEach(function(b){b.classList.remove('on')});
+  var n=document.getElementById(navMap[id]);if(n)n.classList.add('on');
+}
+function toast(msg){var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show')},2200);}
+function pickMode(el){el.parentNode.querySelectorAll('.mode').forEach(function(m){m.classList.remove('on')});el.classList.add('on');}
+function pickPay(el){el.parentNode.querySelectorAll('.radio').forEach(function(r){r.classList.remove('on')});el.classList.add('on');}
+function filt(el){el.parentNode.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on')});el.classList.add('on');toast('Filtr qo\'llandi');}
+function swapCity(){var a=document.getElementById('cityFrom'),b=document.getElementById('cityTo'),t=a.textContent;a.textContent=b.textContent;b.textContent=t;toast('Yo\'nalish almashtirildi');}
+var paxN=1;function pax(d){paxN=Math.max(1,Math.min(6,paxN+d));document.getElementById('paxN').textContent=paxN;document.getElementById('paxLabel').textContent=paxN+' kishi';}
+function setTab(t){document.getElementById('tab-active').classList.toggle('on',t==='active');document.getElementById('tab-history').classList.toggle('on',t==='history');document.getElementById('list-active').style.display=t==='active'?'flex':'none';document.getElementById('list-history').style.display=t==='history'?'flex':'none';}
+
+/* seat grid */
+(function(){var g=document.getElementById('seatGrid'),taken=[3,6,7,12,15,18];for(var i=1;i<=20;i++){var s=document.createElement('div');s.className='seat'+(taken.indexOf(i)>=0?' taken':'');s.textContent=i;if(taken.indexOf(i)<0){s.onclick=function(){var sel=g.querySelector('.sel');if(sel)sel.classList.remove('sel');this.classList.add('sel');document.getElementById('seatPick').textContent='Joy '+this.textContent;var b=document.getElementById('seatNext');b.style.opacity='1';b.style.pointerEvents='auto';};}g.appendChild(s);}})();
+
+/* promo */
+function applyPromo(){var v=document.getElementById('promoIn').value.trim().toUpperCase();if(v==='SAFAR10'){document.getElementById('promoRow').style.display='flex';document.getElementById('ckTotal').textContent='220 500 so\'m';document.getElementById('payBtnAmt').textContent='220 500';toast('Chegirma qo\'llandi: −24 500 so\'m');}else if(v===''){toast('Promo-kod kiriting');}else{toast('Bunday kod topilmadi');}}
+function payNow(){toast('To\'lov muvaffaqiyatli!');setTimeout(function(){go('s-tickets');setTab('active');},700);}
+
+/* cart */
+var cartSub=310000;
+function rmCart(id,price){var el=document.getElementById(id);if(!el)return;el.remove();cartSub-=price;var n=document.querySelectorAll('#cartBody .cart-item').length;document.getElementById('cartN').textContent=n;document.getElementById('cartCount').textContent=n;var bd=document.getElementById('cartBadge');if(n>0){bd.textContent=n;bd.style.display='flex';}else{bd.style.display='none';}document.getElementById('cartSub').textContent=fmt(cartSub)+' so\'m';document.getElementById('cartTotal').textContent=fmt(cartSub+10000)+' so\'m';toast('Korzinkadan o\'chirildi');}
+function fmt(n){return n.toLocaleString('ru-RU').replace(/,/g,' ');}
+
+/* refund */
+function confirmRefund(){document.getElementById('refundBody').innerHTML='<div style="text-align:center;padding:48px 12px"><div style="width:86px;height:86px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:46px;margin:0 auto"><i class="ti ti-circle-check"></i></div><div style="font-size:22px;font-weight:800;margin-top:16px">Qaytarildi!</div><div class="muted" style="margin-top:6px">240 000 so\'m Safar hamyoningizga tushirildi.</div><button class="btn btn-primary" style="margin-top:28px" onclick="go(\'s-tickets\');setTab(\'history\')"><i class="ti ti-ticket"></i> Biletlarimga qaytish</button></div>';}
+
+/* notifications */
+function readNoti(el){el.classList.remove('unread');var d=el.querySelector('.udot');if(d)d.remove();updBell();}
+function markAllRead(){document.querySelectorAll('#notiBody .noti').forEach(function(n){n.classList.remove('unread');var d=n.querySelector('.udot');if(d)d.remove();});updBell();toast('Hammasi o\'qildi');}
+function updBell(){var u=document.querySelectorAll('#notiBody .noti.unread').length;document.getElementById('bellDot').style.display=u>0?'block':'none';}
+
+/* settings toggles */
+function tg(el){el.classList.toggle('on');toast(el.classList.contains('on')?'Yoqildi':'O\'chirildi');}
+
+/* topup */
+var topAmt=100000;
+function openTopup(){document.getElementById('topup').classList.add('show');}
+function closeTopup(){document.getElementById('topup').classList.remove('show');}
+function pickAmt(el,v){document.getElementById('amtBtns').querySelectorAll('button').forEach(function(b){b.classList.remove('on')});el.classList.add('on');topAmt=v;document.getElementById('topAmt').textContent=fmt(v);}
+var walletBal=320000;
+function doTopup(){walletBal+=topAmt;document.getElementById('walletAmt').textContent=fmt(walletBal)+' so\'m';document.getElementById('payWallet').textContent=fmt(walletBal)+' so\'m';closeTopup();toast('Hamyon to\'ldirildi: +'+fmt(topAmt)+' so\'m');}
+
+/* live countdown */
+(function(){var total=5*3600+12*60;setInterval(function(){total--;if(total<0)total=0;var h=Math.floor(total/3600),m=Math.floor((total%3600)/60);var el=document.getElementById('cd');if(el)el.textContent=h+' soat '+m+' daqiqa';},1000);})();
+</script>
+</body>
+</html>
