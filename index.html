@@ -263,7 +263,7 @@ button{font-family:inherit}
           <div class="field" onclick="toast('Shahar tanlash')"><i class="ti ti-circle-dot"></i><div><div class="lbl">Qayerdan</div><div class="val" id="cityFrom">Toshkent</div></div></div>
           <button class="swap" onclick="swapCity()"><i class="ti ti-arrows-up-down"></i></button>
           <div class="field" onclick="toast('Shahar tanlash')"><i class="ti ti-map-pin"></i><div><div class="lbl">Qayerga</div><div class="val" id="cityTo">Samarqand</div></div></div>
-          <div class="field" onclick="toast('Sana tanlash')"><i class="ti ti-calendar"></i><div><div class="lbl">Sana</div><div class="val">12-iyun, juma</div></div></div>
+          <div class="field" onclick="toast('Sana tanlash')"><i class="ti ti-calendar"></i><div><div class="lbl">Sana</div><div class="val">26-iyun, juma</div></div></div>
           <div class="field" style="cursor:default"><i class="ti ti-users"></i><div style="flex:1"><div class="lbl">Yo'lovchilar</div><div class="val" id="paxLabel">1 kishi</div></div>
             <div class="counter"><button onclick="pax(-1)">−</button><span id="paxN">1</span><button onclick="pax(1)">+</button></div></div>
         </div>
@@ -281,7 +281,7 @@ button{font-family:inherit}
     <section class="screen" id="s-results">
       <div class="hd">
         <span class="back" onclick="go('s-search')"><i class="ti ti-chevron-left"></i></span>
-        <div style="flex:1;text-align:center"><h1 style="font-size:16px">Toshkent → Samarqand</h1><div class="sub">12-iyun · <span id="resCount">3</span> ta reys</div></div>
+        <div style="flex:1;text-align:center"><h1 style="font-size:16px">Toshkent → Samarqand</h1><div class="sub"26-iyun · <span id="resCount">3</span> ta reys</div></div>
         <button class="iconbtn" onclick="toast('Saralash o\'zgartirildi')"><i class="ti ti-adjustments-horizontal"></i></button>
       </div>
       <div class="body">
@@ -359,8 +359,8 @@ button{font-family:inherit}
     <section class="screen" id="s-cart">
       <div class="hd"><h1>Korzinka</h1><div class="sub"><span id="cartCount">2</span> ta chipta</div></div>
       <div class="body" id="cartBody">
-        <div class="cart-item" id="ci1"><span class="ic"><i class="ti ti-train"></i></span><div class="info"><div class="t">Toshkent → Samarqand</div><div class="s">Afrosiyob · 12-iyun, 14:30 · 240 000 so'm</div></div><button class="rm" onclick="rmCart('ci1',240000)"><i class="ti ti-trash"></i></button></div>
-        <div class="cart-item" id="ci2"><span class="ic"><i class="ti ti-bus"></i></span><div class="info"><div class="t">Samarqand → Buxoro</div><div class="s">Avtobus Lux · 14-iyun, 09:00 · 70 000 so'm</div></div><button class="rm" onclick="rmCart('ci2',70000)"><i class="ti ti-trash"></i></button></div>
+        <div class="cart-item" id="ci1"><span class="ic"><i class="ti ti-train"></i></span><div class="info"><div class="t">Toshkent → Samarqand</div><div class="s">Afrosiyob · 26-iyun, 14:30 · 240 000 so'm</div></div><button class="rm" onclick="rmCart('ci1',240000)"><i class="ti ti-trash"></i></button></div>
+        <div class="cart-item" id="ci2"><span class="ic"><i class="ti ti-bus"></i></span><div class="info"><div class="t">Samarqand → Buxoro</div><div class="s">Avtobus Lux · 28-iyun, 09:00 · 70 000 so'm</div></div><button class="rm" onclick="rmCart('ci2',70000)"><i class="ti ti-trash"></i></button></div>
         <div class="summary">
           <div class="sumrow"><span><span id="cartN">2</span> ta chipta</span><span class="tnum" id="cartSub">310 000 so'm</span></div>
           <div class="sumrow"><span>Xizmat haqi</span><span class="tnum">10 000 so'm</span></div>
@@ -380,11 +380,11 @@ button{font-family:inherit}
           <div class="tkt" onclick="go('s-detail')"><div class="strip"></div><div class="in">
             <div style="display:flex;justify-content:space-between"><span class="tag tag-brand"><i class="ti ti-train"></i> Afrosiyob</span><span class="tag tag-green"><i class="ti ti-circle-check"></i> Tasdiqlangan</span></div>
             <div class="route"><div><div class="time tnum">14:30</div><div class="city">Toshkent</div></div><div class="line"></div><div style="text-align:center"><div class="dur">2s 08d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">16:38</div><div class="city">Samarqand</div></div></div>
-            <div class="muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>12-iyun · Vagon 4 · Joy 17</span><span style="color:var(--brand);font-weight:800">Ko'rish ›</span></div></div></div>
+            <div class="muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>26-iyun · Vagon 4 · Joy 17</span><span style="color:var(--brand);font-weight:800">Ko'rish ›</span></div></div></div>
           <div class="tkt" onclick="go('s-detail')"><div class="strip"></div><div class="in">
             <div style="display:flex;justify-content:space-between"><span class="tag tag-brand"><i class="ti ti-bus"></i> Avtobus Lux</span><span class="tag tag-green"><i class="ti ti-circle-check"></i> Tasdiqlangan</span></div>
             <div class="route"><div><div class="time tnum">09:00</div><div class="city">Samarqand</div></div><div class="line"></div><div style="text-align:center"><div class="dur">2s 30d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum">11:30</div><div class="city">Buxoro</div></div></div>
-            <div class="muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>14-iyun · Joy 8</span><span style="color:var(--brand);font-weight:800">Ko'rish ›</span></div></div></div>
+            <div class="muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>28-iyun · Joy 8</span><span style="color:var(--brand);font-weight:800">Ko'rish ›</span></div></div></div>
         </div>
         <div id="list-history" style="display:none;flex-direction:column;gap:14px">
           <div class="tkt past"><div class="strip"></div><div class="in">
@@ -408,7 +408,7 @@ button{font-family:inherit}
           <div style="padding:16px 16px 0"><div style="display:flex;justify-content:space-between;align-items:center"><span class="tag tag-brand"><i class="ti ti-train"></i> Afrosiyob</span><span class="tag tag-green"><i class="ti ti-circle-check"></i> Tasdiqlangan</span></div>
             <div class="route" style="margin-top:14px"><div><div class="time tnum" style="font-size:24px">14:30</div><div class="city">Toshkent</div></div><div class="line"></div><div style="text-align:center"><div class="dur">2s 08d</div></div><div class="line"></div><div style="text-align:right"><div class="time tnum" style="font-size:24px">16:38</div><div class="city">Samarqand</div></div></div></div>
           <hr class="perf" style="margin:16px 0">
-          <div style="display:flex;justify-content:space-between;padding:0 16px 16px"><div><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Vagon · Joy</div><div style="font-weight:800" class="tnum">4 · 17</div></div><div style="text-align:center"><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Sana</div><div style="font-weight:800">12-iyun</div></div><div style="text-align:right"><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Narx</div><div style="font-weight:800" class="tnum">240 000</div></div></div>
+          <div style="display:flex;justify-content:space-between;padding:0 16px 16px"><div><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Vagon · Joy</div><div style="font-weight:800" class="tnum">4 · 17</div></div><div style="text-align:center"><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Sana</div><div style="font-weight:800">26-iyun</div></div><div style="text-align:right"><div class="lbl" style="font-size:11px;color:var(--faint);font-weight:700">Narx</div><div style="font-weight:800" class="tnum">240 000</div></div></div>
           <div style="background:var(--surface-2);padding:16px;display:flex;align-items:center;justify-content:center;gap:12px"><i class="ti ti-qrcode" style="font-size:50px"></i><div style="font-size:12px;color:var(--muted);font-weight:700">Nazoratda QR<br>kodni ko'rsating</div></div>
         </div>
         <div class="countdown"><i class="ti ti-clock-hour-4"></i><div><div class="lbl">Jo'nashgacha</div><div class="big tnum" id="cd">5 soat 12 daqiqa</div></div><span class="tag tag-green" style="margin-left:auto;padding:6px 10px">100% qaytadi</span></div>
@@ -455,7 +455,7 @@ button{font-family:inherit}
         <button class="iconbtn" onclick="markAllRead()"><i class="ti ti-checks"></i></button></div>
       <div class="body" id="notiBody">
         <div class="noti unread" onclick="readNoti(this)"><span class="nic" style="background:var(--amber-soft);color:var(--amber)"><i class="ti ti-clock-exclamation"></i></span><div class="nbody"><div class="nt">Jo'nashga 3 soat qoldi</div><div class="nx">Afrosiyob 14:30. Hozir bekor qilsangiz 100% qaytadi.</div><div class="ntime">5 daqiqa oldin</div></div><span class="udot"></span></div>
-        <div class="noti unread" onclick="readNoti(this)"><span class="nic" style="background:var(--green-soft);color:var(--green)"><i class="ti ti-discount"></i></span><div class="nbody"><div class="nt">SAFAR10 chegirmasi</div><div class="nx">Keyingi chiptangizga 10% chegirma. 20-iyungacha.</div><div class="ntime">2 soat oldin</div></div><span class="udot"></span></div>
+        <div class="noti unread" onclick="readNoti(this)"><span class="nic" style="background:var(--green-soft);color:var(--green)"><i class="ti ti-discount"></i></span><div class="nbody"><div class="nt">SAFAR10 chegirmasi</div><div class="nx">Keyingi chiptangizga 10% chegirma. 30-iyulgacha.</div><div class="ntime">2 soat oldin</div></div><span class="udot"></span></div>
         <div class="noti" onclick="readNoti(this)"><span class="nic" style="background:var(--brand-soft);color:var(--brand-ink)"><i class="ti ti-circle-check"></i></span><div class="nbody"><div class="nt">To'lov muvaffaqiyatli</div><div class="nx">Samarqand → Buxoro chiptasi tasdiqlandi.</div><div class="ntime">Kecha</div></div></div>
         <div class="noti" onclick="readNoti(this)"><span class="nic" style="background:var(--green-soft);color:var(--green)"><i class="ti ti-cash"></i></span><div class="nbody"><div class="nt">Pul qaytarildi</div><div class="nx">66 500 so'm Safar hamyoningizga tushdi.</div><div class="ntime">15-may</div></div></div>
       </div>
